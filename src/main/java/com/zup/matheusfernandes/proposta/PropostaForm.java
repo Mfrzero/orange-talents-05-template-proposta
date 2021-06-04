@@ -21,7 +21,7 @@ public class PropostaForm {
 	private String nome;
 	@NotBlank @Email
 	private String email;
-	@NotBlank @CPFOrCNPJ
+	@NotBlank @CPFOrCNPJ 
 	private String documento;
 	@NotBlank
 	private String endereco;
@@ -39,6 +39,10 @@ public class PropostaForm {
 	
 	public Long getId() {
 		return id;
+	}
+	
+	public String getDocumento() {
+		return documento;
 	}
 
 	public Proposta converter(EntityManager manager) {
