@@ -2,7 +2,6 @@ package com.zup.matheusfernandes.proposta;
 
 import java.math.BigDecimal;
 
-import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +20,8 @@ public class PropostaForm {
 	private String nome;
 	@NotBlank @Email
 	private String email;
-	@NotBlank @CPFOrCNPJ 
+	@NotBlank 
+	@CPFOrCNPJ 
 	private String documento;
 	@NotBlank
 	private String endereco;
@@ -45,7 +45,7 @@ public class PropostaForm {
 		return documento;
 	}
 
-	public Proposta converter(EntityManager manager) {
+	public Proposta converter() {
 		return new Proposta(nome,email,documento,endereco,salario);
 	}
 }

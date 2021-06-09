@@ -16,7 +16,6 @@ import java.lang.annotation.*;
 @ReportAsSingleViolation // the error reports of each individual composing constraint are ignored
 @Constraint(validatedBy = { }) // we don't need a validator :-)
 @Documented
-@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CPFOrCNPJ {
 
