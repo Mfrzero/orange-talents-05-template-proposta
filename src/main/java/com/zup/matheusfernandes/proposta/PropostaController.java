@@ -2,7 +2,6 @@ package com.zup.matheusfernandes.proposta;
 
 import java.net.URI;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -24,25 +23,22 @@ public class PropostaController {
 	@Autowired
 	private PropostaRepository propostaRepository;
 	@Autowired
-	private AnalisePropostaApi api;
-	
+	private AnalisePropostaApi AnalisePropostaApi;
 
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
-	@Transactional
 	@PostMapping("proposta")
-	public ResponseEntity<PropostaForm> criaProposta(@RequestBody @Valid PropostaForm form,
+	public ResponseEntity<PropostaResponse> criaProposta(@RequestBody @Valid PropostaResponse response,
 			UriComponentsBuilder builder) throws JsonMappingException, JsonProcessingException {
 
-		if (propostaRepository.findByDocumento(form.getDocumento()).isEmpty()) {
-			Proposta proposta = propostaRepository.save(form.converter());
-			proposta.realizarAnalise(api);
+		if (propostaRepository.findByDocumento(response.getDocumento()).isEmpty()) {
+			Proposta proposta = propostaRepository.save(response.converter());
+			proposta.realizarAnalise(AnalisePropostaApi);
 			propostaRepository.save(proposta);
-			URI uri = builder.path("proposta/{id}").build(form.getId());
+			URI uri = builder.path("proposta/{id}").build(response.getId());
 			logger.info("Proposta Criada com Sucesso!", proposta.getDocumento());
 			return ResponseEntity.created(uri).build();
 		}
-
 		return ResponseEntity.unprocessableEntity().build();
 	}
 }
