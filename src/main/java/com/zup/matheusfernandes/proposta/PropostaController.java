@@ -1,14 +1,16 @@
 package com.zup.matheusfernandes.proposta;
 
 import java.net.URI;
+import java.util.Optional;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,25 +26,31 @@ public class PropostaController {
 	@Autowired
 	private PropostaRepository propostaRepository;
 	@Autowired
-	private AnalisePropostaApi api;
-	
+	private AnalisePropostaApi AnalisePropostaApi;
 
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
-	@Transactional
 	@PostMapping("proposta")
-	public ResponseEntity<PropostaForm> criaProposta(@RequestBody @Valid PropostaForm form,
+	public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
 			UriComponentsBuilder builder) throws JsonMappingException, JsonProcessingException {
 
-		if (propostaRepository.findByDocumento(form.getDocumento()).isEmpty()) {
-			Proposta proposta = propostaRepository.save(form.converter());
-			proposta.realizarAnalise(api);
+		if (propostaRepository.findByDocumento(request.getDocumento()).isEmpty()) {
+			Proposta proposta = propostaRepository.save(request.converter());
+			proposta.realizarAnalise(AnalisePropostaApi);
 			propostaRepository.save(proposta);
-			URI uri = builder.path("proposta/{id}").build(form.getId());
+			URI uri = builder.path("proposta/{id}").build(request.getId());
 			logger.info("Proposta Criada com Sucesso!", proposta.getDocumento());
 			return ResponseEntity.created(uri).build();
 		}
-
 		return ResponseEntity.unprocessableEntity().build();
 	}
+	
+	 @GetMapping("/{id}")
+	    public ResponseEntity<?> consultarProposta(@PathVariable("id") Long id) {
+	        Optional<Proposta> proposta = propostaRepository.findById(id);
+	        if (proposta.isPresent()) {
+	            return ResponseEntity.ok().body(new PropostaResponse(proposta.get()));
+	        }
+	        return ResponseEntity.notFound().build();
+	    }
 }

@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface AnalisePropostaApi {
 	
 	@PostMapping("solicitacao")
-	AnalisePropostaForm analisar(AnaliseProposta analiseProposta);
+	AnalisePropostaResponse analisar(AnalisePropostaRequest request);
 
 }
