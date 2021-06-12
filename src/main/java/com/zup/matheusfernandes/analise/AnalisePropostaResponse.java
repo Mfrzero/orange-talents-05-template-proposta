@@ -1,13 +1,19 @@
 package com.zup.matheusfernandes.analise;
 
+<<<<<<< HEAD
 import javax.validation.constraints.NotNull;
 
+=======
+>>>>>>> 982ed91ecc3aa0ca55eb15eea272f0431f54c83f
 public class AnalisePropostaResponse {
 
 	private String documento;
 	private String nome;
 	private String resultadoSolicitacao;
+<<<<<<< HEAD
 	@NotNull
+=======
+>>>>>>> 982ed91ecc3aa0ca55eb15eea272f0431f54c83f
 	private String idProposta;
 
 	@Deprecated

@@ -35,6 +35,7 @@ public class PropostaRequest {
 	public String getDocumento() {
 		return documento;
 	}
+<<<<<<< HEAD
 	
 
 	public String getNome() {
@@ -52,6 +53,8 @@ public class PropostaRequest {
 	public BigDecimal getSalario() {
 		return salario;
 	}
+=======
+>>>>>>> 982ed91ecc3aa0ca55eb15eea272f0431f54c83f
 
 	public Proposta converter() {
 		return new Proposta(nome,email,documento,endereco,salario);
