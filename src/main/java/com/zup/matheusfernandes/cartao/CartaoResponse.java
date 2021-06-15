@@ -1,10 +1,9 @@
 package com.zup.matheusfernandes.cartao;
 
-
 public class CartaoResponse {
 
 	private String id;
-
+	
 	public CartaoResponse(String id) {
 		this.id = id;
 	}
@@ -12,5 +11,4 @@ public class CartaoResponse {
 	public String getId() {
 		return id;
 	}
-
 }

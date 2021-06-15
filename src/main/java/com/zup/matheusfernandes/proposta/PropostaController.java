@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.zup.matheusfernandes.analise.AnalisePropostaApi;
 
 @RestController
-@RequestMapping("/api/propostas")
+@RequestMapping("api/propostas")
 public class PropostaController {
 
 	@Autowired

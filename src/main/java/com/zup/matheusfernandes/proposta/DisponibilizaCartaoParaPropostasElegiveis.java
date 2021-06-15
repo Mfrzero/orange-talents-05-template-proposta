@@ -31,7 +31,7 @@ public class DisponibilizaCartaoParaPropostasElegiveis {
         for (Proposta proposta : propostas) {
             try {
             	CartaoResponse propostaCadastradaEmProvedora = cartaoApi
-                        .buscarPropostaCartao(proposta.getId().toString());
+                        .buscarPropostaCartao(proposta.getId());
                 Cartao cartao = cartaoRepository.save(new Cartao(propostaCadastradaEmProvedora.getId()));
                 proposta.setCartao(cartao);
                 propostaRepository.save(proposta);
