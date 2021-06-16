@@ -7,9 +7,9 @@ public class CarteiraDigitalRequest {
 
 	@Email @NotBlank
 	private String email;
-	private String carteira;
+	private CarteiraEnum carteira;
 
-	public CarteiraDigitalRequest(@Email @NotBlank String email, String carteira) {
+	public CarteiraDigitalRequest(@Email @NotBlank String email, CarteiraEnum carteira) {
 		this.email = email;
 		this.carteira = carteira;
 	}
@@ -17,15 +17,12 @@ public class CarteiraDigitalRequest {
 	public String getEmail() {
 		return email;
 	}
-	public String getCarteira() {
+	public CarteiraEnum getCarteira() {
 		return carteira;
 	}
 
-	public void setCarteira(String carteira) {
-		this.carteira = carteira;
+	public void setCarteira(CarteiraEnum carteiraEnum) {
+		this.carteira = carteiraEnum;
 	}
 
-	public CarteiraEnum getCarteiraEnum() {
-		return CarteiraEnum.valueOf(carteira);
-	}
 }

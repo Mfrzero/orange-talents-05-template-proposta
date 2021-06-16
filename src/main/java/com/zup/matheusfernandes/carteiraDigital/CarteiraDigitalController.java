@@ -35,9 +35,9 @@ public class CarteiraDigitalController {
 		Optional<Cartao> possivelCartao = cartaoRepository.findById(id);
 		if (possivelCartao.isPresent()) {
 			try {
-				request.setCarteira("PAYPAL");
+				request.setCarteira(request.getCarteira());
 				CarteiraDigitalResponse response = cartaoApi.adicionarCarteira(id, request);
-				possivelCartao.get().adicionaCarteiraDigital(new CarteiraDigital(response.getId(), request.getEmail(), request.getCarteiraEnum(),possivelCartao.get()));
+				possivelCartao.get().adicionaCarteiraDigital(new CarteiraDigital(response.getId(), request.getEmail(), request.getCarteira(),possivelCartao.get()));
 				cartaoRepository.save(possivelCartao.get());
 				URI uri = builder.path("/{idCartao}/carteras/{idCarteira}").build(possivelCartao.get().getId(), response.getId());
 				return ResponseEntity.created(uri).build();
