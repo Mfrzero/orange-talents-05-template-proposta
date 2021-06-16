@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.zup.matheusfernandes.avisoviagem.AvisoViagemRequest;
+import com.zup.matheusfernandes.avisoviagem.AvisoViagemResponse;
 import com.zup.matheusfernandes.bloqueio.BloqueioRequest;
 import com.zup.matheusfernandes.bloqueio.BloqueioResponse;
 
@@ -18,6 +20,9 @@ public interface CartaoApi {
 	@GetMapping
 	CartaoResponse buscarPropostaCartao(@RequestParam("idProposta") Long id);
 
-	@PostMapping("/{numeroCartao}/bloqueios")
-	BloqueioResponse bloquearCartao(@PathVariable("numeroCartao") String numeroCartao, BloqueioRequest request);
+	@PostMapping("/{id}/bloqueios")
+	BloqueioResponse bloquearCartao(@PathVariable("id") String id, BloqueioRequest request);
+
+	@PostMapping("/{id}/avisos")
+	AvisoViagemResponse avisoViagem(@PathVariable("id") String id, AvisoViagemRequest request);
 }
