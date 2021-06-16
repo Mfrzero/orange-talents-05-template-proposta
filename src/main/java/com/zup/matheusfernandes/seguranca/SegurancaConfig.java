@@ -1,6 +1,7 @@
 package com.zup.matheusfernandes.seguranca;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,15 +13,24 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 public class SegurancaConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	 protected void configure(HttpSecurity http) throws Exception {
-        http
-        	.authorizeRequests()
-        		.antMatchers(HttpMethod.GET, "/api/propostas/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/cartoes/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/cartoes/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/propostas/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                .anyRequest().authenticated();
-//                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-    }
+		http
+		.csrf().disable()
+			.authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/actuator/**")
+			.hasAuthority("SCOPE_proposta:actuator")
+				.antMatchers(HttpMethod.GET, "/api/propostas/**")
+			.hasAuthority("SCOPE_propostas:read")
+				.antMatchers(HttpMethod.GET, "/api/cartoes/**")
+			.hasAuthority("SCOPE_cartoes:read")
+				.antMatchers(HttpMethod.POST, "/api/cartoes/**")
+			.hasAuthority("SCOPE_cartoes:write")
+				.antMatchers(HttpMethod.POST, "/api/propostas/**")
+			.hasAuthority("SCOPE_propostas:write")
+		.anyRequest().authenticated()
+		.and()
+        	.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+	}
+	
+
 
 }
