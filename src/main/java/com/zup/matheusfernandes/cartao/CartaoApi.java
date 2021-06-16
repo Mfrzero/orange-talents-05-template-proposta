@@ -10,6 +10,8 @@ import com.zup.matheusfernandes.avisoviagem.AvisoViagemRequest;
 import com.zup.matheusfernandes.avisoviagem.AvisoViagemResponse;
 import com.zup.matheusfernandes.bloqueio.BloqueioRequest;
 import com.zup.matheusfernandes.bloqueio.BloqueioResponse;
+import com.zup.matheusfernandes.carteiraDigital.CarteiraDigitalRequest;
+import com.zup.matheusfernandes.carteiraDigital.CarteiraDigitalResponse;
 
 @FeignClient(name = "cartoes", url="http://localhost:8888/api/cartoes")
 public interface CartaoApi {
@@ -25,4 +27,7 @@ public interface CartaoApi {
 
 	@PostMapping("/{id}/avisos")
 	AvisoViagemResponse avisoViagem(@PathVariable("id") String id, AvisoViagemRequest request);
+	
+	@PostMapping("{id}/carteiras")
+	CarteiraDigitalResponse adicionarCarteira(@PathVariable("id") Long id, CarteiraDigitalRequest request);
 }

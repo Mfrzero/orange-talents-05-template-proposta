@@ -1,13 +1,12 @@
 package com.zup.matheusfernandes.cartao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -17,6 +16,7 @@ import com.zup.matheusfernandes.avisoviagem.AvisoViagem;
 import com.zup.matheusfernandes.biometria.Biometria;
 import com.zup.matheusfernandes.bloqueio.Bloqueio;
 import com.zup.matheusfernandes.bloqueio.BloqueioRequest;
+import com.zup.matheusfernandes.carteiraDigital.CarteiraDigital;
 
 import feign.FeignException.FeignClientException;
 
@@ -34,6 +34,8 @@ public class Cartao {
 	private StatusCartao statusCartao;
 	@OneToMany(mappedBy="cartao", cascade=CascadeType.MERGE)
 	private List<AvisoViagem> avisoVagem;
+	@OneToMany(mappedBy="cartao", cascade = CascadeType.MERGE)
+	private List<CarteiraDigital> carteiras;
 	
 	@Deprecated
 	public Cartao() {
@@ -41,13 +43,13 @@ public class Cartao {
 
 	public Cartao(String id) {
 		this.id = id;
-		this.biometrias = biometrias;
-		this.avisoVagem = avisoVagem;
+		this.biometrias = new ArrayList<>();
+		this.avisoVagem = new ArrayList<>();
+		this.carteiras = new ArrayList<>();
 	}
 
-
-	public String getNumeroCartao() {
-		return numeroCartao;
+	public String getId() {
+		return id;
 	}
 
 	public void cadastrarBiometria(Biometria biometria) {
@@ -72,6 +74,10 @@ public class Cartao {
 	
 	public void adicionaAvisoViagem(AvisoViagem avisoViagem) {
 		this.avisoVagem.add(avisoViagem);
+	}
+	
+	public void adicionaCarteiraDigital(CarteiraDigital carteiraDigital) {
+		this.carteiras.add(carteiraDigital);
 	}
 	
 }
