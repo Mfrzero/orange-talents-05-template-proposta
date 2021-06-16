@@ -26,6 +26,8 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter{
 			.hasAuthority("SCOPE_cartoes:write")
 				.antMatchers(HttpMethod.POST, "/api/propostas/**")
 			.hasAuthority("SCOPE_propostas:write")
+				.antMatchers(HttpMethod.POST, "/cartoes/**")
+			.hasAuthority("SCOPE_viagens:write")
 		.anyRequest().authenticated()
 		.and()
         	.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);

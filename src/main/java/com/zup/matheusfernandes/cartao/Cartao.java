@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.http.HttpStatus;
 
+import com.zup.matheusfernandes.avisoviagem.AvisoViagem;
 import com.zup.matheusfernandes.biometria.Biometria;
 import com.zup.matheusfernandes.bloqueio.Bloqueio;
 import com.zup.matheusfernandes.bloqueio.BloqueioRequest;
@@ -22,8 +23,8 @@ import feign.FeignException.FeignClientException;
 @Entity
 public class Cartao {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Id 
+	private String id;
 	private String numeroCartao;
 	@OneToMany(cascade = CascadeType.MERGE)
 	private List<Biometria> biometrias;
@@ -31,19 +32,24 @@ public class Cartao {
 	private List<Bloqueio> bloqueios;
 	@Enumerated(EnumType.STRING)
 	private StatusCartao statusCartao;
+	@OneToMany(mappedBy="cartao", cascade=CascadeType.MERGE)
+	private List<AvisoViagem> avisoVagem;
 	
 	@Deprecated
 	public Cartao() {
 	}
 
-	public Cartao(String numeroCartao) {
-		this.numeroCartao = numeroCartao;
+	public Cartao(String id) {
+		this.id = id;
+		this.biometrias = biometrias;
+		this.avisoVagem = avisoVagem;
 	}
+
 
 	public String getNumeroCartao() {
 		return numeroCartao;
 	}
-	
+
 	public void cadastrarBiometria(Biometria biometria) {
 		biometria.setCartao(this);
 		biometrias.add(biometria);
@@ -62,6 +68,10 @@ public class Cartao {
 	public void adicionarBloqueio(Bloqueio bloqueio) {
 		statusCartao = StatusCartao.BLOQUEADO;
 		bloqueios.add(bloqueio);
+	}
+	
+	public void adicionaAvisoViagem(AvisoViagem avisoViagem) {
+		this.avisoVagem.add(avisoViagem);
 	}
 	
 }

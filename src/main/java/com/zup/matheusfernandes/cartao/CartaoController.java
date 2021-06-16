@@ -47,7 +47,7 @@ public class CartaoController {
 				
 	}
 	
-	@PostMapping("/bloqueios")
+	@PostMapping("/bloqueios/{id}")
 	public ResponseEntity<?> bloquearCartao(@PathVariable Long id, HttpServletRequest request){
 		Optional<Cartao> possivelCartao = cartaoRepository.findById(id);
 		if(possivelCartao.isPresent()) {
@@ -64,4 +64,5 @@ public class CartaoController {
 		
 		return ResponseEntity.notFound().build();
 	}
+	
 }
