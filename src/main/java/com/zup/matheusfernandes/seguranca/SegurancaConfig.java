@@ -1,7 +1,6 @@
 package com.zup.matheusfernandes.seguranca;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,8 +15,7 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter{
 		http
 		.csrf().disable()
 			.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/actuator/**")
-			.hasAuthority("SCOPE_proposta:actuator")
+				.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/api/propostas/**")
 			.hasAuthority("SCOPE_propostas:read")
 				.antMatchers(HttpMethod.GET, "/api/cartoes/**")

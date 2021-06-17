@@ -109,6 +109,7 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
+     - ./prometheus.yml:/etc/prometheus/prometheus.yml
      - prometheus-volume:/etc/prometheus/
     network_mode: bridge
     ports:
@@ -151,7 +152,7 @@ services:
       DB_PASSWORD: p455w0rd
       FINANCIAL_URL: http://analise:9999/api
       ACCOUNTS_URL: http://contas:8888/api/cartoes
-
+  
   mysql:
     image: mysql
     ports:
