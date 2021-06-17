@@ -20,6 +20,9 @@ import com.zup.matheusfernandes.biometria.Biometria;
 import com.zup.matheusfernandes.biometria.BiometriaRequest;
 import com.zup.matheusfernandes.bloqueio.Bloqueio;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+
 @RestController
 @RequestMapping("api/cartoes")
 public class CartaoController {
@@ -30,9 +33,14 @@ public class CartaoController {
 	@Autowired
 	private CartaoApi cartaoApi;
 	
+	@Autowired
+	private Tracer tracer;
 	@PostMapping("/biometrias/{id}")
 	public ResponseEntity<?> criar(@PathVariable Long id, @RequestBody @Valid BiometriaRequest biometriaRequest,
 							UriComponentsBuilder uriBuilder){
+		Span activeSpan = tracer.activeSpan();
+		String userEmail = activeSpan.getBaggageItem("user.email");
+		activeSpan.setBaggageItem("user.email", userEmail);
 		Optional<Cartao> possivelCartao = cartaoRepository.findById(id);
 		if (possivelCartao.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -49,6 +57,9 @@ public class CartaoController {
 	
 	@PostMapping("/bloqueios/{id}")
 	public ResponseEntity<?> bloquearCartao(@PathVariable Long id, HttpServletRequest request){
+		Span activeSpan = tracer.activeSpan();
+		String userEmail = activeSpan.getBaggageItem("user.email");
+		activeSpan.setBaggageItem("user.email", userEmail);
 		Optional<Cartao> possivelCartao = cartaoRepository.findById(id);
 		if(possivelCartao.isPresent()) {
 			

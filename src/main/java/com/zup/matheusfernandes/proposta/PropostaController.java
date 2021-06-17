@@ -21,6 +21,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.zup.matheusfernandes.analise.AnalisePropostaApi;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+
 @RestController
 @RequestMapping("api/propostas")
 public class PropostaController {
@@ -29,13 +32,16 @@ public class PropostaController {
 	private PropostaRepository propostaRepository;
 	@Autowired
 	private AnalisePropostaApi AnalisePropostaApi;
-
+	@Autowired
+	private Tracer tracer;
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
 	@PostMapping
-	public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
-			UriComponentsBuilder builder) throws JsonMappingException, JsonProcessingException {
-
+	public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request, UriComponentsBuilder builder)
+			throws JsonMappingException, JsonProcessingException {
+		Span activeSpan = tracer.activeSpan();
+		String userEmail = activeSpan.getBaggageItem("user.email");
+		activeSpan.setBaggageItem("user.email", userEmail);
 		if (propostaRepository.findByDocumento(request.getDocumento()).isEmpty()) {
 			Proposta proposta = propostaRepository.save(request.converter());
 			proposta.realizarAnalise(AnalisePropostaApi);
@@ -46,13 +52,16 @@ public class PropostaController {
 		}
 		return ResponseEntity.unprocessableEntity().build();
 	}
-	
-	 @GetMapping("/{id}")
-	    public ResponseEntity<?> consultarProposta(@PathVariable("id") Long id) {
-	        Optional<Proposta> proposta = propostaRepository.findById(id);
-	        if (proposta.isPresent()) {
-	            return ResponseEntity.ok().body(new PropostaResponse(proposta.get()));
-	        }
-	        return ResponseEntity.notFound().build();
-	    }
+
+	@GetMapping("/{id}")
+	public ResponseEntity<?> consultarProposta(@PathVariable("id") Long id) {
+		Span activeSpan = tracer.activeSpan();
+		String userEmail = activeSpan.getBaggageItem("user.email");
+		activeSpan.setBaggageItem("user.email", userEmail);
+		Optional<Proposta> proposta = propostaRepository.findById(id);
+		if (proposta.isPresent()) {
+			return ResponseEntity.ok().body(new PropostaResponse(proposta.get()));
+		}
+		return ResponseEntity.notFound().build();
+	}
 }

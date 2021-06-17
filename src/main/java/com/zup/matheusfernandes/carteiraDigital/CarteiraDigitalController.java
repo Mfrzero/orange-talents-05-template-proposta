@@ -19,27 +19,38 @@ import com.zup.matheusfernandes.cartao.CartaoApi;
 import com.zup.matheusfernandes.cartao.CartaoRepository;
 
 import feign.FeignException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("/api/cartoes")
 public class CarteiraDigitalController {
-	
+
 	@Autowired
 	private CartaoRepository cartaoRepository;
 	@Autowired
 	private CartaoApi cartaoApi;
 
+	@Autowired
+	private Tracer tracer;
+
 	@PostMapping("/{id}/carteiras")
-	public ResponseEntity<?> associaCarteira(@PathVariable("id") Long id, @RequestBody @Valid CarteiraDigitalRequest request,
-			UriComponentsBuilder builder){
+	public ResponseEntity<?> associaCarteira(@PathVariable("id") Long id,
+			@RequestBody @Valid CarteiraDigitalRequest request, UriComponentsBuilder builder) {
+		Span activeSpan = tracer.activeSpan();
+		String userEmail = activeSpan.getBaggageItem("user.email");
+		activeSpan.setBaggageItem("user.email", userEmail);
+
 		Optional<Cartao> possivelCartao = cartaoRepository.findById(id);
 		if (possivelCartao.isPresent()) {
 			try {
 				request.setCarteira(request.getCarteira());
 				CarteiraDigitalResponse response = cartaoApi.adicionarCarteira(id, request);
-				possivelCartao.get().adicionaCarteiraDigital(new CarteiraDigital(response.getId(), request.getEmail(), request.getCarteira(),possivelCartao.get()));
+				possivelCartao.get().adicionaCarteiraDigital(new CarteiraDigital(response.getId(), request.getEmail(),
+						request.getCarteira(), possivelCartao.get()));
 				cartaoRepository.save(possivelCartao.get());
-				URI uri = builder.path("/{idCartao}/carteras/{idCarteira}").build(possivelCartao.get().getId(), response.getId());
+				URI uri = builder.path("/{idCartao}/carteras/{idCarteira}").build(possivelCartao.get().getId(),
+						response.getId());
 				return ResponseEntity.created(uri).build();
 			} catch (FeignException e) {
 				return ResponseEntity.status(e.status()).build();

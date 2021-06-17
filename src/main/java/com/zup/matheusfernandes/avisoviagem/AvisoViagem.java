@@ -27,6 +27,11 @@ public class AvisoViagem {
 	@ManyToOne
 	private Cartao cartao;
 	
+	@Deprecated
+	public AvisoViagem() {
+		super();
+	}
+	
 	public AvisoViagem(String destinoViagem, LocalDate terminoViagem, 
 			String ipCliente, String userAgentCliente, Cartao cartao) {
 		this.destinoViagem = destinoViagem;
@@ -36,6 +41,9 @@ public class AvisoViagem {
 		this.userAgentCliente = userAgentCliente;
 		this.cartao = cartao;
 	}
+
+
+
 	
 	
 }
