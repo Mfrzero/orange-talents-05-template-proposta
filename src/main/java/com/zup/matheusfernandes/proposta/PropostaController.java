@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.zup.matheusfernandes.analise.AnalisePropostaApi;
+import com.zup.matheusfernandes.compartilhado.Criptografa;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -42,7 +43,9 @@ public class PropostaController {
 		Span activeSpan = tracer.activeSpan();
 		String userEmail = activeSpan.getBaggageItem("user.email");
 		activeSpan.setBaggageItem("user.email", userEmail);
-		if (propostaRepository.findByDocumento(request.getDocumento()).isEmpty()) {
+		
+		String documentoCriptografado = Criptografa.encrypt(request.getDocumento());
+		if (propostaRepository.findByDocumento(documentoCriptografado).isEmpty()) {
 			Proposta proposta = propostaRepository.save(request.converter());
 			proposta.realizarAnalise(AnalisePropostaApi);
 			propostaRepository.save(proposta);

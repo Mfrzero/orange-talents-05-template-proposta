@@ -17,11 +17,12 @@ import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.zup.matheusfernandes.analise.AnalisePropostaRequest;
 import com.zup.matheusfernandes.analise.AnalisePropostaApi;
+import com.zup.matheusfernandes.analise.AnalisePropostaRequest;
 import com.zup.matheusfernandes.analise.AnalisePropostaResponse;
 import com.zup.matheusfernandes.cartao.Cartao;
 import com.zup.matheusfernandes.compartilhado.CPFOrCNPJ;
+import com.zup.matheusfernandes.compartilhado.Criptografa;
 
 import feign.FeignException;
 
@@ -54,7 +55,7 @@ public class Proposta {
 			@NotBlank String endereco, @NotNull @Positive BigDecimal salario) {
 		this.nome = nome;
 		this.email = email;
-		this.documento = documento;
+		this.documento = Criptografa.encrypt(documento);
 		this.endereco = endereco;
 		this.salario = salario;
 	}
